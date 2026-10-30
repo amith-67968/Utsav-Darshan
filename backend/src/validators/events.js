@@ -1,0 +1,3 @@
+const {z}=require('zod');
+const eventSchema=z.object({event_name:z.string().trim().min(3).max(140),city:z.string().trim().min(2).max(100),location:z.string().trim().min(2).max(220),category_id:z.string().uuid(),start_date:z.string().date(),end_date:z.string().date().optional().or(z.literal('')),description:z.string().trim().min(20).max(4000),cultural_significance:z.string().max(3000).optional().or(z.literal('')),poster_url:z.string().url().optional().or(z.literal('')),latitude:z.coerce.number().min(-90).max(90).optional().or(z.literal('')),longitude:z.coerce.number().min(-180).max(180).optional().or(z.literal(''))}).refine(v=>!v.end_date||v.end_date>=v.start_date,{message:'End date must be on or after the start date',path:['end_date']});
+module.exports={eventSchema};
