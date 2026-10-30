@@ -1,0 +1,4 @@
+const {authClient,supabase}=require('../config/supabase');const {HttpError}=require('../utils/http');
+async function authenticate(req,res,next){try{if(!authClient)throw new HttpError(503,'Authentication is not configured');const h=req.headers.authorization||'';if(!h.startsWith('Bearer '))throw new HttpError(401,'Sign in to continue');const {data,error}=await authClient.auth.getUser(h.slice(7));if(error||!data.user)throw new HttpError(401,'Your session is invalid or expired');req.user=data.user;req.accessToken=h.slice(7);next()}catch(e){next(e)}}
+async function requireAdmin(req,res,next){try{const {data,error}=await supabase.from('profiles').select('role').eq('id',req.user.id).single();if(error||data?.role!=='admin')throw new HttpError(403,'Administrator access required');next()}catch(e){next(e)}}
+module.exports={authenticate,requireAdmin};
