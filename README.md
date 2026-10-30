@@ -17,6 +17,16 @@ A city festival and cultural calendar for discovering verified local events and 
 5. In another terminal, run `cd frontend && npm install && npm run dev`.
 6. Open `http://localhost:3000`. The backend health endpoint is `http://localhost:4000/api/health`.
 
+To populate an empty or partially populated project with sample content, run `npm run seed:demo` from `backend` with `ALLOW_DEMO_SEED=true` set for that command. In PowerShell:
+
+```powershell
+$env:ALLOW_DEMO_SEED = "true"
+npm run seed:demo
+Remove-Item Env:ALLOW_DEMO_SEED
+```
+
+The seed ensures the six requested categories and 32 upcoming `[DEMO]` events across all 28 Indian states. Descriptions state that dates, venue details, cultural notes, and stock poster images are illustrative and unverified. State names are included in event locations because the current events schema has no separate state column. Records are inserted as approved so public pages can display them. The script creates a locked attribution account because the current events schema requires `created_by`; it skips existing event names, only adds missing state labels to its own marked demo records, and never changes or deletes unrelated events. It can be rerun safely. Dates are set when each record is first inserted.
+
 To grant an administrator, set `profiles.role = 'admin'` for the corresponding authenticated user's UUID from the Supabase SQL editor. Admin endpoints re-check the role against the database on each request.
 
 ## Deployment
@@ -33,4 +43,4 @@ Configure Supabase Auth's site URL and allowed redirect URLs for local developme
 
 ## Product scope
 
-The initial implementation includes public discovery, city/category/date filtering, event details, a monthly calendar, Supabase login and registration, contributor submission/history, reporting, admin review and category management APIs, and dashboard summaries. Public event records are restricted to approved events. Map coordinates are stored and event locations link to OpenStreetMap; a Leaflet map view can be enabled as the event location data and client-side map component are completed.
+The initial implementation includes public discovery, city/category/date filtering, event details, month and week calendar views, Supabase login and registration, contributor submission/history, reporting, admin review and category management APIs, dashboard summaries, and a Leaflet/OpenStreetMap view when coordinates are present. Public event records are restricted to approved events.
