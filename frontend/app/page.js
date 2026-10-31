@@ -4,8 +4,8 @@ import EventCard from "../components/EventCard";
 import Reveal from "../components/Reveal";
 import {API} from "../lib/api";
 
-async function getData(path){try{const response=await fetch(`${API}${path}`,{cache:'no-store'});if(response.ok)return await response.json()}catch{}return {data:[]}}
-export const dynamic='force-dynamic';
+async function getData(path){try{const response=await fetch(`${API}${path}`,{next:{revalidate:60}});if(response.ok)return await response.json()}catch{}return {data:[]}}
+export const revalidate=60;
 const cityImages={
   Jaipur:"https://images.unsplash.com/photo-1599661046827-dacff0c0f09a?auto=format&fit=crop&w=700&q=80",
   Varanasi:"https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=700&q=80",
