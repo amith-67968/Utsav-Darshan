@@ -19,12 +19,18 @@ export async function api(path, options={}) {
   const headers = { ...(options.headers || {}) };
   // A JSON Content-Type on a cross-origin GET triggers a needless CORS preflight.
   if (options.body != null && !headers["Content-Type"] && !headers["content-type"]) headers["Content-Type"] = "application/json";
-  const response = await fetch(`${API}${path}`, {
-    ...options,
-    method,
-    headers,
-    cache: options.cache || (publicRead ? "default" : "no-store"),
-  });
+  let response;
+  try {
+    response = await fetch(`${API}${path}`, {
+      ...options,
+      method,
+      headers,
+      cache: options.cache || (publicRead ? "default" : "no-store"),
+    });
+  } catch (error) {
+    if (error.name === "AbortError") throw error;
+    throw new Error(`Could not reach the API at ${API}. Check the deployed API URL and backend CORS settings.`);
+  }
   const data = await response.json().catch(()=>({message:"Unexpected server response"}));
   if(!response.ok) throw new Error(data.message || "Request failed");
   if (publicRead && !options.signal) {
