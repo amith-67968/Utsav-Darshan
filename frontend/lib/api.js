@@ -36,7 +36,12 @@ export async function api(path, options={}) {
     throw new Error(`Could not reach the API at ${API}. Check the deployed API URL and backend CORS settings.`);
   }
   const data = await response.json().catch(()=>({message:"Unexpected server response"}));
-  if(!response.ok) throw new Error(data.message || "Request failed");
+  if (!response.ok) {
+    if (response.status === 404 && data.message === "Route not found") {
+      throw new Error(`The API route was not found at ${API}${path}. Check that NEXT_PUBLIC_API_URL points to the deployed Express API, then redeploy the frontend.`);
+    }
+    throw new Error(data.message || "Request failed");
+  }
   if (publicRead && !options.signal) {
     if (publicCache.size >= 80) publicCache.delete(publicCache.keys().next().value);
     publicCache.set(cacheKey, { data, expiresAt: Date.now() + PUBLIC_CACHE_TTL });
