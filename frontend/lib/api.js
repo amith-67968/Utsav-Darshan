@@ -1,4 +1,8 @@
-export const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+// The Express service mounts its routes under /api. Accept either the service
+// origin or an origin that already includes /api to avoid /events 404s after deploy.
+const apiOrigin = configuredApiUrl.trim().replace(/\/+$/, "").replace(/(?:\/api)+$/i, "");
+export const API = `${apiOrigin}/api`;
 const publicCache = new Map();
 const PUBLIC_CACHE_TTL = 15_000;
 
