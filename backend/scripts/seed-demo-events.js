@@ -76,7 +76,7 @@ async function getOrCreateSeedOwner(){
     if(owner)return owner;
     if(result.data.users.length<500)break;
   }
-  const created=await supabase.auth.admin.createUser({email:ownerEmail,password:crypto.randomBytes(48).toString('base64url'),email_confirm:true,user_metadata:{seed_owner:'utsav-darshan-demo-data',full_name:'Utsav Darshan demonstration data'}});
+  const created=await supabase.auth.admin.createUser({email:ownerEmail,password:crypto.randomBytes(48).toString('base64url'),user_metadata:{seed_owner:'utsav-darshan-demo-data',full_name:'Utsav Darshan demonstration data'}});
   if(created.error)throw new Error(`Could not create the demo attribution profile: ${created.error.message}`);
   return created.data.user;
 }

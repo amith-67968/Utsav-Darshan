@@ -72,7 +72,7 @@ This repository deploys as three parts: Supabase (database, auth and poster stor
 
 ### 4. Set up the first administrator
 
-1. Register the intended admin account through the website and complete email confirmation.
+1. Register the intended admin account through the website, then sign in.
 2. In the Supabase SQL Editor, promote that account by email. Replace the example address before running:
 
    ```sql
